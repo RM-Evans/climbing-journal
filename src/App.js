@@ -6,49 +6,21 @@ import {
   TableRow,
   TableCell,
   TableHead,
-  Checkbox
+  Checkbox,
+  Button,
 } from '@mui/material'
 import './App.css'
 import JournalEntryForm from './components/JournalEntryForm'
 
 function App() {
+  // const [rowIndex, setRowIndex] = useState(null)
+  //!! const [columnIndex, setColumnIndex] = useState()
+  // const [pendingDelete, setPendingDelete] = useState('')
+  // const [selected, setSelected] = useState([])
 
-const [rowIndex, setRowIndex] = useState(null)
-//!! const [columnIndex, setColumnIndex] = useState()
-const [pendingDelete, setPendingDelete] = useState('')
-const [selected, setSelected] = useState([])
-
-// const handleCheckedChange = (event) => {
-//   setChecked(event.target.checked)
-// }
-//!!!!!!!!!!!!!!000000000000
-// const handleCheckedChange = (event, id) => {
-//   const selectedIndex = selected.indexOf(id);
-//   let newSelected = [];
-
-//   if (selectedIndex === -1) {
-//     newSelected = newSelected.concat(selected, id);
-//   } else if (selectedIndex === 0) {
-//     newSelected = newSelected.concat(selected.slice(1));
-//   } else if (selectedIndex === selected.length - 1) {
-//     newSelected = newSelected.concat(selected.slice(0, -1));
-//   } else if (selectedIndex > 0) {
-//     newSelected = newSelected.concat(
-//       selected.slice(0, selectedIndex),
-//       selected.slice(selectedIndex + 1),
-//     );
-//   }
-//   setSelected(newSelected);
-// };
-
-
-// const isSelected = (id) => selected.indexOf(id) !== -1;
-
-
-// const isItemSelected = isSelected(row);
-
-
-//!!!!!!!000000000000
+  // const handleCheckedChange = (event) => {
+  //   setChecked(event.target.checked)
+  // }
 
   //get stuff from form
   function createData(date, climbingType, grade, climbingLocation, mpLink) {
@@ -67,32 +39,33 @@ const [selected, setSelected] = useState([])
     // console.log('here' + rows)
   }
 
-  // console.log(rows) //? I have an array
   useEffect(() => {
     localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(rows))
   }, [rows])
 
-  useEffect(() => {
-    console.log(selected)
-  },[selected])
+  // useEffect(() => {
+  //   console.log(selected)
+  // }, [selected])
 
+  // function clickDelete(i) {
+  //   setRowIndex(i)
+  //   const gottenItems = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY)) // GET THE KEY AND VALUE PAIR FOR MY ROW
+  //   const filteredItems = gottenItems.filter((_, x) => x !== i) // if the index (x) doesnt equal i then filter it out into a new array
+  //   localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(filteredItems)) // return the new values into localStorage
+  //   // window.location.reload()
+  // }
 
-  function clickDelete(i) {
-    setRowIndex(i)
-    const gottenItems = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY)) // GET THE KEY AND VALUE PAIR FOR MY ROW
-    const filteredItems = gottenItems.filter( (_, x ) => x !== i) // if the index (x) doesnt equal i then filter it out into a new array
-    localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(filteredItems)) // return the new values into localStorage
-  window.location.reload()
-  }
-
-  // ! now i need to 
-
-
+  // ! now i need to track the checkbox state inside data or track it in useState hook,
+  // ! so i need
 
   // !! I can now see the index of the row
 
   // save an array of arrays to localStorage. detect (useEffect?) when array changes and
   // delete and save new array
+
+  function deleteRow(rows) {
+    setRows(rows.filter((i) => i.checked !== true))
+  }
 
   const tableHeader = {
     fontWeight: 'bold',
@@ -101,10 +74,9 @@ const [selected, setSelected] = useState([])
   return (
     <div className="App">
       <h1>Welcome to your climbing journal</h1>
-    { selected ? (
-<div>heres a thing</div>
-    ) : null }
-      
+      {rows.find((i) => i.checked) ? (
+        <Button onClick={() => deleteRow(rows)}>delete stuff</Button>
+      ) : null}
       <JournalEntryForm addEntry={addEntry} />
       <TableContainer
         sx={{
@@ -117,7 +89,9 @@ const [selected, setSelected] = useState([])
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
           <TableHead>
             <TableRow>
-            <Checkbox/> //! throwing error span in tr
+              <TableCell>
+                <Checkbox />
+              </TableCell>
               <TableCell sx={tableHeader}>Date</TableCell>
               <TableCell sx={tableHeader}>Type</TableCell>
               <TableCell sx={tableHeader}>Grade</TableCell>
@@ -126,28 +100,30 @@ const [selected, setSelected] = useState([])
             </TableRow>
           </TableHead>
           <TableBody>
-            {rows.map((row, index) => (
-
-                <TableRow
-                key={row.id} 
-                onClick={() => clickDelete(index)}
-                >
-                  <Checkbox 
-                  value={index}
-                  // checked={isItemSelected}
-                  // onClick={() => handleClick(row.id)}
-                  // onChange={handleCheckedChange}
-                  // ! using same state for all checkboxes rn -- i cant figure out how to use these to get the state of each check box
-                  // onClick={() => setPendingDelete(index)}
-                  />
-                
+            {rows.map((row, index) => {
+              return (
+                <TableRow key={row.id}>
+                  <TableCell>
+                    <Checkbox
+                      // value={index} -- //! dont need to find it again
+                      checked={row.checked === true}
+                      // onClick={() => handleClick(row.id)}
+                      onChange={(event) => {
+                        rows[index].checked = event.target.checked
+                        setRows([...rows])
+                        console.log(event.target.checked)
+                      }}
+                      // ! using same state for all checkboxes rn -- i cant figure out how to use these to get the state of each check box
+                    />
+                  </TableCell>
                   <TableCell>{row.date.toString()}</TableCell>
                   <TableCell>{row.climbingType}</TableCell>
                   <TableCell>{row.grade}</TableCell>
                   <TableCell>{row.location}</TableCell>
                   <TableCell>{row.mpLink}</TableCell>
-              </TableRow>
-            ))}
+                </TableRow>
+              )
+            })}
           </TableBody>
         </Table>
       </TableContainer>

@@ -56,10 +56,10 @@ export default function JournalEntryForm(props) {
   }
 
   function getUniqueID() {
-    // Get the timestamp and convert 
+    // Get the timestamp and convert
     // it into alphanumeric input
-    return Date.now().toString(36);
-}
+    return Date.now().toString(36)
+  }
 
   // const doTheThing = () => {
   //   props.addEntry({ date: new Date(), climbingType: 'Sport', location: 'Lcc' })
@@ -92,6 +92,7 @@ export default function JournalEntryForm(props) {
     if ((dateVal && selectVal && locationVal && gradeVal !== '') || undefined) {
       props.addEntry({
         id: ID,
+        checked: false,
         date: dateRef.current.value,
         climbingType: selectRef.current.value,
         grade: gradeRef.current.value,
