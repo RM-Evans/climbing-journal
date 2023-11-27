@@ -1,28 +1,20 @@
-import React, { useState, useEffect, useRef } from 'react'
-
-import Button from '@mui/material/Button'
-import Modal from '@mui/material/Modal'
-
-import { Box, ThemeProvider, createTheme, typography } from '@mui/system'
-import { DatePicker } from '@mui/x-date-pickers'
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
-
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
-
-import vgrades from '../VGrades'
-import yosemiteGrades from '../YosemiteGrades'
-import iceGrades from '../IceGrades'
-
 import {
   FormControl,
   InputLabel,
-  FormHelperText,
-  Input,
-  TextField,
-  Select,
   MenuItem,
+  Select,
+  TextField,
 } from '@mui/material'
+import Button from '@mui/material/Button'
+import Modal from '@mui/material/Modal'
+import { Box } from '@mui/system'
+import { DatePicker } from '@mui/x-date-pickers'
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
 import dayjs from 'dayjs'
+import React, { useRef, useState } from 'react'
+import vgrades from '../VGrades'
+import yosemiteGrades from '../YosemiteGrades'
 
 export default function JournalEntryForm(props) {
   const [open, setOpen] = useState(false)
