@@ -15,8 +15,6 @@ import vgrades from '../data/VGrades'
 import yosemiteGrades from '../data/YosemiteGrades'
 import dayjs from 'dayjs' 
 
-const today = dayjs()
-
 export default function EntryForm(props) {
   const modalStyle = {
     bgcolor: 'white',
@@ -36,7 +34,7 @@ export default function EntryForm(props) {
 
   const [grade, setGrade] = useState('')
   const [location, setLocation] = useState('')
-  const [date, setDate] = useState() // TODO - Make this value today's date. dayjs() is returning an error
+  const [date, setDate] = useState()
   const [mpLink, setMpLink] = useState('')
   const [climbingType, setClimbingType] = useState('')
 
@@ -58,7 +56,8 @@ export default function EntryForm(props) {
     let id = getUniqueID()
     const model = {
       id,
-      date,
+	  // ensure we format the date here on submit, so our data layer is correctly formatted before hand.
+	  date: date.format('MM/DD/YYYY').toString(),
       climbingType,
       grade,
       location,
@@ -85,7 +84,7 @@ export default function EntryForm(props) {
         >
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DatePicker
-              defaultValue={today}
+              defaultValue={dayjs()}
               label="Date of climb"
               value={date}
               onChange={handleDateChange}
