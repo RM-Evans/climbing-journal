@@ -13,6 +13,9 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
 import React, { useEffect, useState } from 'react'
 import vgrades from '../data/VGrades'
 import yosemiteGrades from '../data/YosemiteGrades'
+import dayjs from 'dayjs' 
+
+const today = dayjs()
 
 export default function EntryForm(props) {
   const modalStyle = {
@@ -33,7 +36,7 @@ export default function EntryForm(props) {
 
   const [grade, setGrade] = useState('')
   const [location, setLocation] = useState('')
-  const [date, setDate] = useState(null) // TODO - Make this value today's date. dayjs() is returning an error
+  const [date, setDate] = useState() // TODO - Make this value today's date. dayjs() is returning an error
   const [mpLink, setMpLink] = useState('')
   const [climbingType, setClimbingType] = useState('')
 
@@ -48,8 +51,7 @@ export default function EntryForm(props) {
   }, [date])
 
   const handleDateChange = (newDate) => {
-    const newSelectedDate = newDate.format('MM/DD/YYYY').toString()
-    setDate(newSelectedDate)
+	setDate(newDate)
   }
 
   const onSubmit = () => {
@@ -83,12 +85,12 @@ export default function EntryForm(props) {
         >
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DatePicker
-              // defaultValue={dayjs()}
+              defaultValue={today}
               label="Date of climb"
               value={date}
               onChange={handleDateChange}
-              // inputRef={dateRef}
               sx={{ width: 2 / 5 }}
+			  format="MM/DD/YYYY"
             />
           </LocalizationProvider>
           <FormControl>
