@@ -1,12 +1,22 @@
 import React from 'react'
 import './App.css'
-import Layout from './components/Layout'
+import { Routes, Route } from 'react-router-dom'
+import Home from './pages/Home'
+import SignUp from './pages/SignUp'
+import Login from './pages/Login'
+import NavBar from './components/NavBar'
 
 function App() {
   return (
     <div className="App">
-      <h1>Welcome to your climbing journal</h1>
-      <Layout />
+      <NavBar />
+      <h1>Welcome </h1>
+
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="signup" element={<SignUp />} />
+        <Route path="login" element={<Login />} />
+      </Routes>
     </div>
   )
 }

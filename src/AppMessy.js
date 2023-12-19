@@ -1,14 +1,14 @@
-import React, { useState, useEffect } from 'react'
 import {
+  Button,
+  Checkbox,
   Table,
   TableBody,
-  TableContainer,
-  TableRow,
   TableCell,
+  TableContainer,
   TableHead,
-  Checkbox,
-  Button,
+  TableRow,
 } from '@mui/material'
+import React, { useEffect, useState } from 'react'
 import './App.css'
 import JournalEntryForm from './components/JournalEntryForm'
 
@@ -111,9 +111,8 @@ function App() {
                       onChange={(event) => {
                         rows[index].checked = event.target.checked
                         setRows([...rows])
-                        console.log(event.target.checked)
+                        // console.log(event.target.checked)
                       }}
-                      // ! using same state for all checkboxes rn -- i cant figure out how to use these to get the state of each check box
                     />
                   </TableCell>
                   <TableCell>{row.date.toString()}</TableCell>

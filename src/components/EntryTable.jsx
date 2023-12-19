@@ -12,7 +12,7 @@ const tableHeader = {
   fontWeight: 'bold',
 }
 
-export default function EntryTable({ rows }) {
+export default function EntryTable({ rows, setRows }) {
   return (
     <Table sx={{ minWidth: 650 }} aria-label="simple table">
       <TableHead>
@@ -41,10 +41,9 @@ export default function EntryTable({ rows }) {
                     setRows([...rows])
                     console.log(event.target.checked)
                   }}
-                  // ! using same state for all checkboxes rn -- i cant figure out how to use these to get the state of each check box
                 />
               </TableCell>
-              <TableCell>{row.date.toString()}</TableCell>
+              <TableCell>{row.date}</TableCell>
               <TableCell>{row.climbingType}</TableCell>
               <TableCell>{row.grade}</TableCell>
               <TableCell>{row.location}</TableCell>

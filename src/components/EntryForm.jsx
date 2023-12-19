@@ -10,10 +10,9 @@ import { Box } from '@mui/system'
 import { DatePicker } from '@mui/x-date-pickers'
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
-import dayjs from 'dayjs'
-import React, { useState } from 'react'
-import vgrades from '../VGrades'
-import yosemiteGrades from '../YosemiteGrades'
+import React, { useEffect, useState } from 'react'
+import vgrades from '../data/VGrades'
+import yosemiteGrades from '../data/YosemiteGrades'
 
 export default function EntryForm(props) {
   const modalStyle = {
@@ -26,15 +25,15 @@ export default function EntryForm(props) {
     justifyContent: 'space-between',
   }
 
-  // const selectRef = useRef(null)
-  // const gradeRef = useRef(null)
-  // const locationRef = useRef(null)
-  // const dateRef = useRef(null)
-  // const mpLinkRef = useRef(null)
+  function getUniqueID() {
+    // Get the timestamp and convert
+    // it into alphanumeric input
+    return Date.now().toString(36)
+  }
 
   const [grade, setGrade] = useState('')
   const [location, setLocation] = useState('')
-  const [date, setDate] = useState(null)
+  const [date, setDate] = useState(null) // TODO - Make this value today's date. dayjs() is returning an error
   const [mpLink, setMpLink] = useState('')
   const [climbingType, setClimbingType] = useState('')
 
@@ -44,20 +43,31 @@ export default function EntryForm(props) {
     setGrade('')
     setClimbingType(val)
   }
+  useEffect(() => {
+    console.log(date)
+  }, [date])
+
+  const handleDateChange = (newDate) => {
+    const newSelectedDate = newDate.format('MM/DD/YYYY').toString()
+    setDate(newSelectedDate)
+  }
 
   const onSubmit = () => {
+    let id = getUniqueID()
     const model = {
+      id,
+      date,
+      climbingType,
       grade,
       location,
-      date,
       mpLink,
     }
 
     // TODO actually validate
-    const valid = true
-    if (!valid) {
-      return
-    }
+    // const valid = true
+    // if (!valid) {
+    //   return
+    // }
     props.onSubmit(model)
   }
 
@@ -73,10 +83,11 @@ export default function EntryForm(props) {
         >
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DatePicker
-              defaultValue={dayjs()}
+              // defaultValue={dayjs()}
               label="Date of climb"
               value={date}
-              onChange={setDate}
+              onChange={handleDateChange}
+              // inputRef={dateRef}
               sx={{ width: 2 / 5 }}
             />
           </LocalizationProvider>
@@ -85,7 +96,7 @@ export default function EntryForm(props) {
 
             <Select
               defaultValue={''}
-              label="012" //this wont work but i need it bc it gives me white space to add the inputLabel as a component?????
+              label="___" //this wont work but i need it bc it gives me white space to add the inputLabel as a component?????
               value={climbingType}
               onChange={(e) => updateClimbingType(e.target.value)}
               sx={{ minWidth: 90, paddingLeft: '30' }}
@@ -101,7 +112,7 @@ export default function EntryForm(props) {
 
             <Select
               defaultValue={''}
-              label="0123" //this wont work but i need it bc it gives me white space to add the inputLabel as a component?????
+              label="____" //this wont work but i need it bc it gives me white space to add the inputLabel as a component?????
               value={grade}
               onChange={(e) => setGrade(e.target.value)}
               sx={{ minWidth: 90, paddingLeft: '30' }}
