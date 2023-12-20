@@ -33,8 +33,8 @@ export default function EntryForm(props) {
   }
 
   const [grade, setGrade] = useState('')
-  const [location, setLocation] = useState('')
-  const [date, setDate] = useState()
+  const [name, setName] = useState('')
+  const [date, setDate] = useState(undefined)
   const [mpLink, setMpLink] = useState('')
   const [climbingType, setClimbingType] = useState('')
 
@@ -56,11 +56,12 @@ export default function EntryForm(props) {
     let id = getUniqueID()
     const model = {
       id,
+      //
 	  // ensure we format the date here on submit, so our data layer is correctly formatted before hand.
-	  date: date.format('MM/DD/YYYY').toString(),
+	    date: date.format('MM/DD/YYYY').toString(),
       climbingType,
       grade,
-      location,
+      name,
       mpLink,
     }
 
@@ -84,12 +85,12 @@ export default function EntryForm(props) {
         >
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DatePicker
-              defaultValue={dayjs()}
+              // defaultValue={dayjs()}
               label="Date of climb"
               value={date}
               onChange={handleDateChange}
               sx={{ width: 2 / 5 }}
-			  format="MM/DD/YYYY"
+			        format="MM/DD/YYYY"
             />
           </LocalizationProvider>
           <FormControl>
@@ -137,10 +138,10 @@ export default function EntryForm(props) {
         >
           <TextField
             id="outlined-basic"
-            label="Climb Location"
+            label="Climb Name"
             variant="outlined"
-            value={location}
-            onChange={(e) => setLocation(e.target.value)}
+            value={name}
+            onChange={(e) => setName(e.target.value)}
           />
         </FormControl>
         <FormControl

@@ -13,7 +13,8 @@ function App() {
       <h1>Welcome </h1>
 
       <Routes>
-        <Route path="/" element={<Home />} />
+        <Route path="/home" element={<Home />} />
+        {/* I need to set path to "/" as a backup, I dont remember how to do that */}
         <Route path="signup" element={<SignUp />} />
         <Route path="login" element={<Login />} />
       </Routes>

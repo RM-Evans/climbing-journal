@@ -1,7 +1,8 @@
 import Modal from '@mui/material/Modal'
 import { Box } from '@mui/system'
 import React, { useEffect, useState } from 'react'
-import { collection, getDocs, getDoc, doc } from 'firebase/firestore'
+import { collection, getc, getDocs, getDoc, setDoc, doc } from 'firebase/firestore'
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { db } from '../firebase'
 
 import Actions from '../components/Actions'
@@ -19,6 +20,53 @@ export default function Layout(props) {
 
   const [rows, setRows] = useState([])
 
+
+const [uid, setUid] = useState('')
+
+
+
+  const auth = getAuth();
+   onAuthStateChanged(auth, async  (user) => {
+    if (user) {
+      // User is signed in, see docs for a list of available properties
+      // https://firebase.google.com/docs/reference/js/auth.user
+      const uid = user.uid;
+      const userRef = doc(db, 'users', uid)
+      const getUserRef = await getDoc(userRef)
+      const doesExist = getUserRef.exists()
+
+      
+      if (doesExist) { 
+        const UserDocThatExists = getUserRef.data()
+        console.log(UserDocThatExists)
+
+        const userClimbRef = collection(db, 'users', uid, "climbs")
+        const getUserClimbRef = await getDocs(userClimbRef)
+        console.log(getUserClimbRef.docs[0].data())
+       } else {
+        setDoc(userRef, {
+          UID: uid,
+        });
+       }
+
+    
+    
+      //!! nah this wont work, it is recursion // setUid(uid) //can i set state to access outside in this case -  this most likely doesnt work but reminds me i need to get the user id somehow to add to a subcollection
+      console.log(uid)
+
+      
+
+      // ...
+    } else {
+      // User is signed out
+      // ...
+
+      console.log('there is no user???? ')
+    }
+  });
+
+
+
   const onNewEntry = () => {
     setOpen(true)
   }
@@ -32,6 +80,11 @@ export default function Layout(props) {
     console.log('submitted', model)
 
     setRows([model, ...rows])
+//?? before i do this, i need to get uid without manually grabbing it
+        setDoc(doc(db, "users", 'vAUXcP32yhMkqK7PWuOqNSnYYur2', "climbs"  ), {
+          model
+        });
+    // if i push rows then it will rewrite the subcollection, right?
     onModalClose()
   }
 
@@ -52,7 +105,7 @@ export default function Layout(props) {
       const docSnap = await getDoc(docRef)
 
       if (docSnap.exists()) {
-        console.log('Document data:', docSnap.data())
+        // console.log('Document data:', docSnap.data())
         setRows([docSnap.data()])
       } else {
         // docSnap.data() will be undefined in this case
@@ -114,7 +167,7 @@ export default function Layout(props) {
   return (
     <>
       {/* <SignUp /> */}
-      <h1>90127391273</h1>
+      <h1>hooooome</h1>
 
       <Actions onNewEntry={onNewEntry} rows={rows} deleteRow={deleteRow} />
       <EntryTable rows={rows} setRows={setRows} />

@@ -15,7 +15,7 @@ export default function NavBar() {
   return (
     <Box component="section" sx={{ p: 2, border: '1px dashed grey' }}>
       {/* <MuiLink sx={{ bgColor: 'red' }}>asdfg</MuiLink> */}
-      <Link style={{ borderStyle: 'solid' }} to="/">
+      <Link style={{ underline: 'none' }} to="/">
         Home
       </Link>
     </Box>
