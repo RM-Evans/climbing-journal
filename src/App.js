@@ -1,16 +1,18 @@
 import React from 'react'
 import './App.css'
-import { Routes, Route } from 'react-router-dom'
+import { Routes, Route, useNavigate } from 'react-router-dom'
 import Home from './pages/Home'
 import SignUp from './pages/SignUp'
 import Login from './pages/Login'
 import NavBar from './components/NavBar'
+import SignOut from './components/SignOut'
+import { getAuth, onAuthStateChanged } from 'firebase/auth'
 
 function App() {
+  const navigate = useNavigate()
   return (
     <div className="App">
       <NavBar />
-      <h1>Welcome </h1>
 
       <Routes>
         <Route path="/home" element={<Home />} />

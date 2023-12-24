@@ -13,7 +13,7 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
 import dayjs from 'dayjs'
 import React, { useRef, useState } from 'react'
-import vgrades from '../VGrades'
+import vgrades from '../data/VGrades'
 import yosemiteGrades from '../YosemiteGrades'
 
 export default function JournalEntryForm(props) {

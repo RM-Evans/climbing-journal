@@ -52,6 +52,7 @@ export default function Login() {
           margin: 'auto',
         }}
       >
+        <h1>LOGIN</h1>
         {/* <Typography
           sx={{
             textAlign: 'left',
