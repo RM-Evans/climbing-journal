@@ -1,5 +1,5 @@
 import { getAuth, signOut } from 'firebase/auth'
-import { Button } from '@mui/material'
+import { Button, Link } from '@mui/material'
 import { useNavigate } from 'react-router-dom'
 
 export default function SignOut() {
@@ -12,7 +12,7 @@ export default function SignOut() {
     }
   }
   const navigate = useNavigate()
-  async function actuallySignOut(user) {
+  async function actuallySignOut() {
     await handleSignOut()
     await navigate('/login')
     if (!auth.currentUser) {
@@ -21,9 +21,9 @@ export default function SignOut() {
   }
   return (
     <>
-      <Button variant="text" onClick={() => actuallySignOut()}>
-        sign out
-      </Button>
+      <Link sx={{ cursor: 'pointer' }} onClick={() => actuallySignOut()}>
+        Sign Out
+      </Link>
     </>
   )
 }

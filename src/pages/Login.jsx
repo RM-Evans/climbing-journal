@@ -1,7 +1,19 @@
-import { Box, FormControl, TextField, Typography, Link } from '@mui/material'
-import { useEffect } from 'react'
-// imported from firebase auth sdk
-import { getAuth } from 'firebase/auth'
+import {
+  getAuth,
+  signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
+  GoogleAuthProvider,
+  signInWithPopup,
+} from 'firebase/auth'
+import {
+  Button,
+  Box,
+  FormControl,
+  TextField,
+  Typography,
+  Link,
+} from '@mui/material'
+import { useEffect, useState } from 'react'
 // ensures compatibility with the older versions of firebase
 import firebase from 'firebase/compat/app'
 // imports pre-built UI for firebase authentication
@@ -11,36 +23,45 @@ import 'firebaseui/dist/firebaseui.css'
 import { app } from '../firebase'
 
 export default function Login() {
-  useEffect(() => {
-    const ui =
-      firebaseui.auth.AuthUI.getInstance() ||
-      // since Firebase v9 and above service are imported when needed instad of being a namespace
-      new firebaseui.auth.AuthUI(getAuth(app))
-
-    ui.start('#firebaseui-auth-container', {
-      signInSuccessUrl: '/home',
-      signInOptions: [
-        // Leave the lines as is for the providers you want to offer your users.
-        {
-          provider: firebase.auth.GoogleAuthProvider.PROVIDER_ID,
-          clientId:
-            '1087181270222-hemmuogsrncvfk1igl9q4slnsds8ra27.apps.googleusercontent.com',
-        },
-        {
-          provider: firebase.auth.EmailAuthProvider.PROVIDER_ID,
-        },
-        // leave for ANOTHER video
-        // firebaseui.auth.AnonymousAuthProvider.PROVIDER_ID,
-      ],
-      // required to enable one-tap sign-up credential helper
-      credentialHelper: firebaseui.auth.CredentialHelper.GOOGLE_YOLO,
-    })
-  }, [])
-
   const formInput = {
     width: 'auto',
     paddingBottom: '20px',
   }
+
+  const auth = getAuth()
+
+  const provider = new GoogleAuthProvider()
+  provider.addScope('https://www.googleapis.com/auth/contacts.readonly')
+  provider.setCustomParameters({
+    login_hint: 'user@example.com',
+  })
+
+  const [username, setUsername] = useState('')
+  const [password, setPassword] = useState('')
+
+  const doLogin = async () => {
+    console.log('login', username, password)
+    try {
+      await signInWithEmailAndPassword(auth, username, password)
+    } catch (err) {
+      if (err.code === 'auth/invalid-credential') {
+        const doIt = confirm('Would you like us to create that account?')
+        if (!doIt) {
+          return
+        }
+        console.log('creating', username, password)
+        await createUserWithEmailAndPassword(auth, username, password)
+        console.log('created!')
+      } else {
+        alert('Something went wrong logging in!')
+      }
+    }
+  }
+
+  const doGoogle = async () => {
+    const result = await signInWithPopup(auth, provider)
+  }
+
   return (
     <>
       <Box
@@ -53,7 +74,7 @@ export default function Login() {
         }}
       >
         <h1>LOGIN</h1>
-        {/* <Typography
+        <Typography
           sx={{
             textAlign: 'left',
             paddingBottom: '20px',
@@ -63,20 +84,25 @@ export default function Login() {
           Login
         </Typography>
         <FormControl>
-          <TextField sx={formInput} label="email" />
+          <TextField
+            sx={formInput}
+            label="email"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+          />
         </FormControl>
         <FormControl>
-          <TextField sx={formInput} label="password" />
+          <TextField
+            type="password"
+            sx={formInput}
+            label="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
         </FormControl>
-        <Link
-          href="/SignUp"
-          sx={{
-            textAlign: 'left',
-            fontSize: 'h8.fontSize',
-          }}
-        >
-          Don't have an account?
-        </Link> */}
+        <Button onClick={doLogin}>Login</Button>
+        (if an account doesn't exist, we'll create it!)
+        <Button onClick={doGoogle}>Google Icon Here</Button>
       </Box>
     </>
   )

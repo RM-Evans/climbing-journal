@@ -45,7 +45,7 @@ export default function Layout(props) {
 
         const userClimbRef = collection(db, 'users', uid, 'climbs')
         const getUserClimbRef = await getDocs(userClimbRef)
-        console.log(getUserClimbRef.docs[0].data())
+        // console.log(getUserClimbRef.docs[0].data())
       } else {
         setDoc(userRef, {
           UID: uid,
