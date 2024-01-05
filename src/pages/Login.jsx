@@ -5,6 +5,8 @@ import {
   GoogleAuthProvider,
   signInWithPopup,
 } from 'firebase/auth'
+import { setDoc, doc } from 'firebase/firestore'
+
 import {
   Button,
   Box,
@@ -20,7 +22,8 @@ import firebase from 'firebase/compat/app'
 import * as firebaseui from 'firebaseui'
 // imports the firebaseui styles using the CDN
 import 'firebaseui/dist/firebaseui.css'
-import { app } from '../firebase'
+import { app, db } from '../firebase'
+import { useNavigate } from 'react-router'
 
 export default function Login() {
   const formInput = {
@@ -42,15 +45,24 @@ export default function Login() {
   const doLogin = async () => {
     console.log('login', username, password)
     try {
+      // Sign into a users account
       await signInWithEmailAndPassword(auth, username, password)
     } catch (err) {
       if (err.code === 'auth/invalid-credential') {
-        const doIt = confirm('Would you like us to create that account?')
+        // if no user exists, ask if they would like us to create one
+        const doIt = window.confirm('Would you like us to create that account?')
         if (!doIt) {
           return
         }
         console.log('creating', username, password)
+        // create a user
         await createUserWithEmailAndPassword(auth, username, password)
+        // get the uid and create a document
+        const uid = auth.currentUser.uid
+        const userRef = doc(db, 'users', uid)
+        setDoc(userRef, {
+          UID: uid,
+        })
         console.log('created!')
       } else {
         alert('Something went wrong logging in!')

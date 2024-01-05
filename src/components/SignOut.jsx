@@ -15,6 +15,7 @@ export default function SignOut() {
   async function actuallySignOut() {
     await handleSignOut()
     await navigate('/login')
+    window.location.reload()
     if (!auth.currentUser) {
       console.log('no user signed in')
     }

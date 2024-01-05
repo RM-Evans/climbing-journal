@@ -1,24 +1,16 @@
 import Modal from '@mui/material/Modal'
 import { Box } from '@mui/system'
 import React, { useEffect, useState } from 'react'
-import {
-  collection,
-  getc,
-  getDocs,
-  getDoc,
-  setDoc,
-  doc,
-} from 'firebase/firestore'
+import { collection, getDocs, getDoc, setDoc, doc } from 'firebase/firestore'
 import { getAuth, onAuthStateChanged } from 'firebase/auth'
 import { db } from '../firebase'
 
 import Actions from '../components/Actions'
 import EntryForm from '../components/EntryForm'
 import EntryTable from '../components/EntryTable'
-import SignUp from './SignUp'
 
 export default function Layout(props) {
-  const LOCAL_STORAGE_KEY = 'myRows'
+  //! const LOCAL_STORAGE_KEY = 'myRows'
 
   const [open, setOpen] = useState(false)
   // const [rows, setRows] = useState(
@@ -30,6 +22,7 @@ export default function Layout(props) {
   const [uid, setUid] = useState('')
 
   const auth = getAuth()
+
   onAuthStateChanged(auth, async (user) => {
     if (user) {
       // User is signed in, see docs for a list of available properties
@@ -40,27 +33,29 @@ export default function Layout(props) {
       const doesExist = getUserRef.exists()
 
       if (doesExist) {
+        // reference the UID and get the
         const UserDocThatExists = getUserRef.data()
-        console.log(UserDocThatExists)
-
+        // ? console.log(UserDocThatExists)
+        // make a reference to the collection of docs belonging to this user
         const userClimbRef = collection(db, 'users', uid, 'climbs')
+        //  now i get the docs from the current user
         const getUserClimbRef = await getDocs(userClimbRef)
         // console.log(getUserClimbRef.docs[0].data())
       } else {
+        // set user ID
         setDoc(userRef, {
           UID: uid,
         })
       }
 
-      //!! nah this wont work, it is recursion // setUid(uid) //can i set state to access outside in this case -  this most likely doesnt work but reminds me i need to get the user id somehow to add to a subcollection
-      console.log(uid)
+      // ? console.log(uid)
 
       // ...
     } else {
       // User is signed out
       // ...
 
-      console.log('there is no user???? ')
+      console.log('there is no user signed in ')
     }
   })
 
@@ -78,20 +73,16 @@ export default function Layout(props) {
 
     setRows([model, ...rows])
     //?? before i do this, i need to get uid without manually grabbing it
-    setDoc(doc(db, 'users', 'vAUXcP32yhMkqK7PWuOqNSnYYur2', 'climbs'), {
-      model,
-    })
+    // setDoc(doc(db, 'users', 'vAUXcP32yhMkqK7PWuOqNSnYYur2', 'climbs'), {
+    //   model,
+    // })
     // if i push rows then it will rewrite the subcollection, right?
     onModalClose()
   }
 
   function deleteRow() {
-    console.log(rows) // logging the onClick Event???
     setRows(rows.filter((i) => i.checked !== true))
   }
-  useEffect(() => {
-    console.log(rows)
-  }, [rows])
 
   // const rowRef = collection(db, 'climbing-entry')
   const docRef = doc(db, 'climbing-entry', 'klpHoY0MiR6wMvfbFtnd')
@@ -107,33 +98,6 @@ export default function Layout(props) {
       } else {
         // docSnap.data() will be undefined in this case
         console.log(`nO SuCH dOCuMenT
-        
-⠀⠀⠀⠀⠀⠀⠀⠀⣠⣶⣖⡲⢄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
-⠀⠀⠀⠀⠀⠀⠀⠀⡏⠀⠀⠑⣄⢣⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
-⠀⠀⠀⠀⠀⠀⠀⠀⢧⠀⣄⠀⠈⣆⢣⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
-⠀⠀⠀⠀⠀⠀⠀⠀⠈⢧⠹⡆⠀⠈⢧⢧⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
-⠀⠀⠀⠀⠀⠀⣠⠤⢤⣨⣧⡾⠦⠃⠀⢳⣷⠦⣤⣤⡖⠒⠒⠲⢴⣶⣯⣝⠒⠒⢋⡹⠳⡄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
-⠀⠀⠀⣠⣤⠞⠁⢻⡿⡿⠿⠿⢤⣀⣤⣾⣿⣦⠈⣿⣿⣦⣤⣤⡀⠉⠙⠉⠀⡰⠋⠀⠀⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
-⣀⣤⡞⠁⠀⢀⣀⡀⠿⠿⢆⣠⡼⠟⠋⢉⣾⠏⠀⠛⢻⣿⣛⡛⠁⠀⣀⡤⠚⠀⠀⣀⡀⢧⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
-⣟⠀⣽⣭⡍⠉⠉⠉⠉⠱⣿⣁⣀⣠⣴⣿⠋⠀⠉⠉⠉⢀⣴⣮⡉⠉⠁⢹⠀⢠⣾⣿⣿⡌⣷⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
-⠈⠑⣭⠝⣿⠀⢠⠀⠀⠀⠈⠛⠛⠛⠉⠀⠀⠀⠀⡴⠊⣿⣀⣸⡉⠑⠂⢸⠀⢸⣿⣿⡿⠃⣏⠀⠀⠀⠀⠀⠀⠀⣠⡴⠻⡆⠀⠀⠀
-⢠⣞⡿⠚⠋⠉⠙⠳⣄⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⠟⠊⠉⠉⠉⠙⠲⡄⠈⢆⠀⠉⠉⢀⣀⠘⢦⠀⢀⡤⠤⣤⡞⣩⣶⢠⠇⠀⠀⠀
-⠀⡟⣿⣾⡓⣆⠀⠀⠘⡆⠀⠀⠀⠀⠀⠀⠀⢠⡏⠀⠀⠀⣰⣶⣖⣆⢹⠀⠀⣳⡀⠀⢺⡿⠂⢸⡶⠋⠀⠀⠀⢹⠁⡇⢸⢠⣶⢶⣄
-⠀⢧⡙⠿⠟⠃⠀⠀⡰⠃⡀⠀⠀⠀⠀⠀⠀⠈⢧⡀⠀⠀⠘⠿⣿⣿⠏⠀⠀⢸⡇⠀⠀⠀⢠⣾⠁⠀⠀⠀⣠⠞⢰⡇⣸⣿⢏⡏⣽
-⠀⠈⠙⢦⣤⣤⠴⠊⣡⠞⢡⡟⠀⠀⠀⠀⠀⠀⠀⠙⣖⣒⡒⣚⣩⡵⠂⠀⠀⠀⠳⣄⠀⣰⣿⣇⠀⢀⣠⣶⣿⣶⣿⡇⢟⡤⠘⣰⠃
-⠀⠀⠀⠀⣨⠷⠖⠋⠁⢀⡞⢀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠁⠀⠀⠀⠀⠀⠀⠀⠘⡆⢹⣿⡿⠋⠉⡀⠙⣿⠛⢻⣧⣌⣤⣾⡇⠀
-⠀⠀⠀⠸⣇⠀⠀⣀⡴⠋⠀⠿⠁⠀⠀⠀⢀⣀⣤⣤⣤⣤⣤⡀⠀⠀⠀⠀⠀⠀⠀⠀⠧⣀⠉⠀⠀⢾⣿⠀⣯⠀⠈⣿⣿⣿⣿⣿⡄
-⠀⠀⠀⠀⠈⠉⢹⠏⠀⠀⠀⠀⠀⢀⣠⣶⣿⣿⡿⠿⠛⠛⠋⣁⡀⠀⠀⣴⣶⣶⣶⣤⠀⠀⢱⡀⠀⠀⠀⠀⢸⠀⠀⢸⣿⣿⡿⠟⠋
-⠀⠀⠀⠀⠀⠀⢸⡄⠀⠀⠀⠀⣰⣟⡿⡟⢋⣁⣤⠤⠶⠛⠛⠉⠀⠀⠀⠛⠛⠛⠛⢉⣠⣄⡀⠳⠶⢤⡀⠀⠸⡆⠀⣠⠿⠋⠀⠀⠀
-⠀⠀⠀⠀⠀⠀⠀⢧⠀⠀⠀⡾⠙⠧⠔⠚⠛⠳⠤⣄⣀⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠛⠋⠁⠀⢀⣀⣉⣭⡷⠟⠉⠀⠀⠀⠀⠀⠀
-⠀⠀⠀⠀⠀⠀⠀⠈⢧⡀⡼⠁⠀⠀⠀⠀⠀⠀⣴⣿⣿⣿⣿⣿⡾⠛⠒⠒⠒⠒⠒⠚⠛⢻⣿⣿⣿⣿⣿⣿⠁⠀⠀⠀⠀⠀⠀⠀⠀
-⠀⠀⠀⠀⠀⠀⠀⠀⠀⠙⠁⠀⠀⠀⠀⠀⠀⢀⡸⢋⡽⠿⠿⠟⠁⠀⠀⠀⠀⠀⠀⠀⠀⠈⢻⠇⣿⠿⠿⠋⠀⠀⠀⠀⠀⠀⠀⠀⠀
-⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢻⣴⣿⡦⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡟⢰⣇⠀⠀⢀⡀⠀⠀⠀⠀⠀⠀⠀⠀
-⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢰⣿⣿⣿⣷⣦⣿⡆⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠙⠻⢿⣏⠓⢿⣿⣦⠀⠀⠀⠀⠀⠀⠀
-⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠘⢿⣿⣿⠿⠿⠿⠃⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣤⣤⣿⣿⣿⡿⠀⠀⠀⠀⠀⠀⠀
-⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢻⣿⣿⣿⠿⠋⠀⠀⠀⠀⠀⠀⠀⠀
-
-        
         `)
       }
       // console.log(rowData.docs[0]._document.data.value.mapValue.fields)
@@ -163,8 +127,7 @@ export default function Layout(props) {
 
   return (
     <>
-      {/* <SignUp /> */}
-      <h1>hooooome</h1>
+      <h1>home page</h1>
 
       <Actions onNewEntry={onNewEntry} rows={rows} deleteRow={deleteRow} />
       <EntryTable rows={rows} setRows={setRows} />

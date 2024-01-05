@@ -9,21 +9,14 @@ export default function NavBar() {
   const [loginMethods, setLoginMethods] = useState(true)
 
   const auth = getAuth()
-
   onAuthStateChanged(auth, (user) => {
     setUserActivity(user)
   })
-
+  // const provider = new GoogleAuthProvider()
   const navBarContainer = {
     display: 'flex',
     justifyContent: 'end',
-    // border: 2,
-    // boxShadow: '0px 21px 39px -19px rgba(0,0,0,0.75)',
   }
-
-  // const navBarItem = {
-  //   margin: 100,
-  // }
 
   const visible = {
     display: 'flex',
@@ -32,7 +25,6 @@ export default function NavBar() {
   const hidden = {
     display: 'hidden',
   }
-  // style={loginMethods ? hidden : visible}
 
   // const loginMethodStyles = `
   //   display: ${loginMethods ? 'flex' : 'hidden'};
@@ -47,9 +39,7 @@ export default function NavBar() {
           </>
         ) : (
           <>
-            <Link to="/home" style={{ underline: 'none' }}>
-              Home
-            </Link>
+            <Link to="/">Home</Link>
             <Link to="signup" style={!loginMethods ? hidden : visible}>
               Sign Up
             </Link>
